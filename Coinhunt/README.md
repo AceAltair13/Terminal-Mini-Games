@@ -1,15 +1,15 @@
 # CoinHunt
 A fun minigame cog for discord RedBot
 
-> [♦] : Player
->
-> [·] : Visited
->
-> [○] : Coin
->
-> [+] : Power-Ups
->
-> [♣] : Reveal-Shard
+    [♦] : Player
+    
+    [·] : Visited
+    
+    [○] : Coin
+    
+    [+] : Power-Ups
+    
+    [♣] : Reveal-Shard
 
 * Main Objective is to collect all the coins hidden in the map.
 * If you manage to get all the coins you win!
