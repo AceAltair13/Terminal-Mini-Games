@@ -2,9 +2,13 @@
 A fun minigame cog for discord RedBot
 
 > [♦] : Player
+>
 > [·] : Visited
+>
 > [○] : Coin
+>
 > [+] : Power-Ups
+>
 > [♣] : Reveal-Shard
 
 * Main Objective is to collect all the coins hidden in the map.
