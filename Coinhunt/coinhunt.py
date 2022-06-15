@@ -32,7 +32,10 @@ KEYS = {
     b'w': Direction.up,
     b'a': Direction.left,
     b's': Direction.down,
-    b'd': Direction.right
+    b'd': Direction.right,
+    b'1': 1,
+    b'2': 2,
+    b'3': 3,
 }
 
 
@@ -67,6 +70,7 @@ class Cell:
 
 
 class CoinGame:
+    highscore = 0
 
     def reveal_near(self):
         x, y = self.player
@@ -88,7 +92,7 @@ class CoinGame:
             'max_power': 0,
             'max_reveal': 0,
             'moves': 25,
-            'max_moves': 25
+            'max_moves': 25,
         }
         self.player = (8, 4)
         self.coinmap = {}
@@ -152,7 +156,8 @@ class CoinGame:
                 else:
                     symbols.append('♦')
 
-        return dedent("""
+        return dedent(
+            """
         #####################
         # {} {} {} {} {} {} {} {} {} #
         # {} {} {} {} {} {} {} {} {} #
@@ -169,10 +174,17 @@ class CoinGame:
         Power-Ups: {} / {}
         Reveals: {} / {}
         """.format(
-            *symbols, self.stats['moves'], self.stats['max_moves'],
-            self.stats['coins'], self.stats['max_coins'], self.stats['power'],
-            self.stats['max_power'], self.stats['reveal'], self.stats['max_reveal']
-        ))
+                *symbols,
+                self.stats['moves'],
+                self.stats['max_moves'],
+                self.stats['coins'],
+                self.stats['max_coins'],
+                self.stats['power'],
+                self.stats['max_power'],
+                self.stats['reveal'],
+                self.stats['max_reveal']
+            )
+        )
 
 
 def get_key(check):
@@ -187,19 +199,93 @@ def check(key):
     return KEYS.get(key)
 
 
-game = CoinGame()
+def show_menu():
+    print(
+        dedent(
+            """
+            
+        ░█████╗░░█████╗░██╗███╗░░██╗██╗░░██╗██╗░░░██╗███╗░░██╗████████╗
+        ██╔══██╗██╔══██╗██║████╗░██║██║░░██║██║░░░██║████╗░██║╚══██╔══╝
+        ██║░░╚═╝██║░░██║██║██╔██╗██║███████║██║░░░██║██╔██╗██║░░░██║░░░
+        ██║░░██╗██║░░██║██║██║╚████║██╔══██║██║░░░██║██║╚████║░░░██║░░░
+        ╚█████╔╝╚█████╔╝██║██║░╚███║██║░░██║╚██████╔╝██║░╚███║░░░██║░░░
+        ░╚════╝░░╚════╝░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░╚═════╝░╚═╝░░╚══╝░░░╚═╝░░░
+        
+            [1] Play
+            [2] Help
+            [3] Exit
 
-print(game.render())
-while True:
-    way = get_key(check)
-    game.move_player(way)
-    os.system('cls')
+            Your Previous Score : {}
+
+            """.format(
+                CoinGame.highscore
+            )
+        )
+    )
+    option = get_key(check)
+    if option == 1:
+        os.system('cls')
+        start_game()
+    elif option == 2:
+        os.system('cls')
+        print(
+            dedent(
+                '''
+            Objective =========
+            
+            A Small Minigame where main objective is to collect coins in limited number of moves
+            
+            Legend ============
+
+            [♦] : Player
+            [·] : Visited
+            [○] : Coin
+            [+] : Power-Ups
+            [♣] : Reveal-Shard
+            
+            Description =======
+
+            Power-Ups increase total number of moves available by 5.
+            Reveal-Shard reveals all the coins in the map.
+            
+            ===================
+
+            Press any key to go back ...
+            '''
+            )
+        )
+        msvcrt.getch()
+        os.system('cls')
+        show_menu()
+    elif option == 3:
+        os.system('exit')
+    else:
+        os.system('cls')
+        show_menu()
+
+
+def start_game():
+    game = CoinGame()
     print(game.render())
-    if game.stats['coins'] == game.stats['max_coins']:
-        print("Congratulations, Your Win! Your Score: ", game.stats['coins'])
-        msvcrt.getch()
-        break
-    if game.stats['moves'] == 0:
-        print("Game Over!, Your Score: ", game.stats['coins'])
-        msvcrt.getch()
-        break
+    while True:
+        way = get_key(check)
+        game.move_player(way)
+        os.system('cls')
+        print(game.render())
+        if game.stats['coins'] == game.stats['max_coins']:
+            print(
+                "Congratulations, Your Win! Your Score: ",
+                game.stats['coins'] + game.stats['moves'],
+            )
+            msvcrt.getch()
+            break
+        if game.stats['moves'] == 0:
+            print("Game Over!, Your Score: ", game.stats['coins'])
+            msvcrt.getch()
+            break
+    CoinGame.highscore = game.stats['coins'] + game.stats['moves']
+    os.system('cls')
+    show_menu()
+
+
+show_menu()
